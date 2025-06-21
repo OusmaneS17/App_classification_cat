@@ -1,0 +1,145 @@
+
+<!-- cat_app/templates/cat_app/index.html -->
+{% extends "cat_app/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block NavBar %}
+    <a href='{% url "index" %}' class="main-nav-item activate">Accueil</a>
+    <a href='{% url "prediction" %}' class="main-nav-item">Classification Chat/Chien</a>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="animal-form">
+    {% csrf_token %}
+    
+    <div class="form-header">
+        <h2><i class="fas fa-paw"></i> Identifiez votre animal</h2>
+        <p>Téléchargez une photo claire de face ou de profil pour analyse</p>
+    </div>
+
+    <div class="form-group file-upload">
+        <label for="AnimalImg" class="custom-file-upload">
+            <i class="fas fa-camera"></i> Sélectionner une photo
+        </label>
+        <input id="AnimalImg" 
+               name="image" 
+               type="file"
+               accept=".jpg,.jpeg,.png,.webp"
+               required
+               onchange="updateLabel()">
+        {% if form.image.errors %}
+            <div class="error-message">{{ form.image.errors }}</div>
+        {% endif %}
+        <div class="image-preview" id="imagePreview"></div>
+    </div>
+
+    <div class="form-tips">
+        <h3>Conseils pour une meilleure analyse :</h3>
+        <ul>
+            <li><i class="fas fa-check-circle"></i> Photo de face ou de profil</li>
+            <li><i class="fas fa-check-circle"></i> Fond uni de préférence</li>
+            <li><i class="fas fa-check-circle"></i> Bon éclairage</li>
+            <li><i class="fas fa-check-circle"></i> Animal entier visible</li>
+        </ul>
+    </div>
+
+    <button id="submit" type="submit" class="analyze-button">
+        <i class="fas fa-search"></i> Analyser
+    </button>
+</form>
+{% endblock %}
+
+{% block AjaxScript %}
+<script type="text/javascript">
+    function updateLabel() {
+        var input = document.getElementById('AnimalImg');
+        var label = document.querySelector('label[for="AnimalImg"]');
+        var preview = document.getElementById('imagePreview');
+        
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Aperçu de l\'image">';
+                preview.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+            
+            // Mise à jour du label avec nom du fichier
+            var fileName = input.files[0].name;
+            var maxLength = 25;
+            
+            if (fileName.length > maxLength) {
+                fileName = fileName.substring(0, maxLength - 3) + '...';
+            }
+            label.innerHTML = '<i class="fas fa-check-circle"></i> ' + fileName;
+        }
+    }
+</script>
+
+<style>
+    .animal-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    
+    .form-header h2 {
+        color:rgb(108, 32, 122);
+    }
+    
+    .form-tips {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .form-tips ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .form-tips li {
+        padding: 5px 0;
+    }
+    
+    .analyze-button {
+        background:rgb(82, 12, 97);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .analyze-button:hover {
+        background:rgb(103, 24, 99);
+        transform: translateY(-2px);
+    }
+    
+    #imagePreview img {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 15px;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}

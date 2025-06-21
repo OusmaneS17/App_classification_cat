@@ -1,0 +1,90 @@
+{% extends "cat_app/base.html" %}
+{% load static %}
+
+    {% block NavBar %}
+        <a href= '{% url "index" %}' class="main-nav-item activate">Accueil</a>
+        <a href= '{% url "prediction" %}' class="main-nav-item">Classification Chat/Chien</a>
+    {% endblock  %}
+
+    {% block content %}
+            <!--Page d'Accueil-->
+                <div class="main-block">
+                    <div class="stat">
+                    <header id = "headStat1" name="headStat1">Score AUC du modèle</header>
+                    <div id="stat1"></div>
+                    </div>
+
+                    <div class="stat">
+                        <header id = "headStat2" name="headStat2">Score F1 du modèle</header>
+                        <div id="stat2"></div>
+                    </div>
+
+                    <div class="stat">
+                        <header id = "headStat3"  name="headStat3">Précision du modèle</header>
+                        <div id="stat3"></div>
+                    </div>
+
+                    <div class="description">
+                    <h1>À propos de ce projet</h1>
+                    <p>
+                    Les technologies de reconnaissance d'animaux sont de plus en plus demandées par les refuges, vétérinaires et propriétaires. Notre solution offre une classification précise entre chats et chiens.
+                    </p><p>
+                    Nous avons développé un modèle de vision par ordinateur capable de distinguer les félins des canidés avec une grande fiabilité, accessible via cette plateforme web intuitive.
+                    </p><p>
+                    Cet outil permet aux professionnels comme aux particuliers d'identifier rapidement le type d'animal à partir d'une simple photo, utile pour :
+                    </p>
+                    <ul>
+                        <li>Les refuges animaliers pour classer leurs pensionnaires</li>
+                        <li>Les vétérinaires pour préparer les consultations</li>
+                        <li>Les propriétaires curieux de mieux connaître leur animal</li>
+                    </ul>
+                </div>
+
+                    <!--Mode d'emploi-->
+                    <div class="description">
+                    <h1>Comment utiliser</h1>
+                    <p>Procédure pour identifier un chat ou un chien :</p>
+                        <ul>
+                            <li><p>Accédez à la section <a href='{% url "prediction" %}'>Classification Chat/Chien</a></p></li>
+                            <li><p>Téléversez une photo claire de l'animal (face ou profil)</p></li>
+                            <li><p>Cliquez sur "Analyser" pour lancer l'identification</p></li>
+                            <li><p>Attendez quelques instants le résultat</p></li>
+                        </ul>
+                    <p>Le système vous indiquera s'il s'agit d'un chat ou d'un chien avec son niveau de confiance.</p>
+                </div>
+                </div>
+     {% endblock  %}
+
+<!--Scripts AJAX-->
+    {% block AjaxScript %}
+        <script type="text/JAVASCRIPT">
+            // Métriques de performance
+            let AUC = 94;
+            let F1Score = 86;
+            let accuracy = 86;
+
+            function StatAccurary(idStat, stat, count = 0) {
+                this.element = document.getElementById(idStat);
+                this.stat = stat;
+                this.count = count;
+                this.interval = setInterval(this.updateStat.bind(this), 1500 / this.stat);
+            }
+
+            StatAccurary.prototype.updateStat = function () {
+                if (this.count <= this.stat) {
+                    if (this.count >= this.stat*0.5) {
+                        this.element.textContent = this.count + "%";
+                    }
+                    if (this.count <= this.stat*0.8) {
+                        this.element.style.height = `${(this.count/this.stat)*100}%`;
+                    }
+                    this.count++;
+                } else {
+                    clearInterval(this.interval);
+                }
+            }
+            let stat1 = new StatAccurary('stat1', AUC);
+            let stat2 = new StatAccurary('stat2', F1Score);
+            let stat3 = new StatAccurary('stat3', accuracy);
+        </script>
+    {% endblock  %}

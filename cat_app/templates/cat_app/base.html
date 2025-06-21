@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/DL.jpg' %}" type="image/png">
+    <title>Classification Chat/Chien</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block css %}{% endblock  %}
+    
+
+</head>
+
+{% comment %} HTML BODY {% endcomment %}
+<body>
+    <div class='main'>
+
+        <div class="main-nav">
+            <header>
+                <a href="#" class="icone"></a>
+            </header>
+        <!-- Barre de navigation -->
+        <nav class="main-nav-list">
+            {% block NavBar %}{% endblock  %}
+        </nav>
+
+
+        </div>
+
+
+<!-- application -->
+        <div class='main-app'>
+            <header class='main-toolbar'>
+                <a href="#" class="menu-open"></a>
+                <h1 class="titre">Classification Chat/Chien</h1>
+            </header>
+
+         <div class='main-content'>
+            {% block content %}
+
+            {% endblock  %}
+
+         <div>
+
+
+    <!--Scripts ou Les requêtes AJAX ici-->
+         {% block AjaxScript %}
+
+         {% endblock  %}
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+// *******************************Gestion de la responsivité****************************
+const dimPetite =800 ;
+const dimMoyenne = 1100 ;
+const smalNavWidth = '19%' ; //Largeur de l'écran de navigation à 19%
+const largeNavWidth = '22%' ; //Largeur de l'écran de navigation à 22%
+const maxNavWidth = '40%' ; //Utilisé que lorsqu'on clique sur menu-open pour afficher la barre de nav
+
+// Fonction pour basculer la visibilité de la barre de navigation sur les petits écrans
+function toggleNav() {
+    let screenWidth = window.innerWidth;
+    if (screenWidth <= dimPetite){
+        let navList = document.querySelector('.main-nav');
+        if (navList.style.display == 'block' || navList.style.display == 'flex') {
+            navList.style.display =  'none';
+            // navList.style.width = smalNavWidth;
+
+        }
+        else{
+            navList.style.display =  'block';
+            navList.style.width = maxNavWidth; // Définir la largeur de la barre de navigation au max lorsqu'elle est affichée avec cette fonction
+        }
+    }
+
+}
+
+// Attachez la fonction à l'événement clic de l'icône
+document.querySelector('.menu-open').addEventListener('click', toggleNav);
+document.querySelector('.main-nav-list').addEventListener('click', function(even){
+    let screenWidth = window.innerWidth;
+    if (even.target.classList.contains('main-nav-item') && screenWidth <= dimPetite){
+        toggleNav();
+    }
+
+})
+
+// Afficher ou blocquer la barre denavigation lorsque la taille est resp supérieur ou égale à 800
+window.addEventListener('resize', function() {
+    let screenWidth = window.innerWidth;
+    let navList = document.querySelector('.main-nav');
+
+    // Si la largeur de l'écran est inférieure ou égale à 800px, masquer la navList, sinon la montrer
+    if (screenWidth <= dimPetite) {
+        navList.style.display = 'none';
+    }else {
+        navList.style.display = 'block';
+
+        if (screenWidth <= dimMoyenne) {
+            navList.style.width = largeNavWidth;
+        } else  {
+
+            navList.style.width = smalNavWidth;
+        }
+
+    }
+
+
+  });
+
+
+
+
+</script>
+</body>
+</html>

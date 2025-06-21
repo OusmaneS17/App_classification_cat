@@ -1,0 +1,97 @@
+{% extends "cat_app/base.html" %}
+{% load static %}
+
+{% block NavBar %}
+    <a href='{% url "index" %}' class="main-nav-item activate">Accueil</a>
+    <a href='{% url "prediction" %}' class="main-nav-item">Classification Chat/Chien</a>
+{% endblock %}
+
+{% block content %}
+    <h1 id="TitreResult">Résultats de Classification</h1>
+    <div id="prediction" class="main-block">
+        <div class="col45" id="resultContent">
+            <p>Notre modèle de vision par ordinateur a analysé l'image et a identifié un
+               <span class="highlight">{{ prediction }}</span> avec
+               <span class="highlight">{{ confidence|floatformat:2 }}%</span> de confiance.</p>
+            
+            <div class="probability-bars">
+                <div class="probability-label">Probabilité Chat: {{ prob_cat|floatformat:2 }}%</div>
+                <div class="probability-bar cat" style="width: {{ prob_cat }}%"></div>
+                
+                <div class="probability-label">Probabilité Chien: {{ prob_dog|floatformat:2 }}%</div>
+                <div class="probability-bar dog" style="width: {{ prob_dog }}%"></div>
+            </div>
+            
+            <strong>Comment fonctionne l'analyse :</strong>
+            <ul>
+                <li>Étape 1 : L'image est redimensionnée et normalisée pour le traitement</li>
+                <li>Étape 2 : Le modèle scanne l'image pour détecter les caractéristiques félines/canines</li>
+                <li>Étape 3 : Plusieurs couches de réseaux neuronaux analysent les motifs visuels</li>
+                <li>Étape 4 : Le modèle détermine la probabilité pour chaque classe</li>
+            </ul>
+            
+            <p>Cette technologie d'identification animale peut être utile pour :</p>
+            <ul>
+                <li>Les refuges animaliers pour classer leurs pensionnaires</li>
+                <li>Les vétérinaires pour identifier rapidement les races</li>
+                <li>Les propriétaires curieux de connaître la race de leur animal</li>
+            </ul>
+        </div>
+        
+        <div id="preview" class="col45">
+            <!-- Affichage de l'image téléchargée -->
+            {% if image_url %}
+                <img src="{{ image_url }}" alt="Image de l'animal téléchargée" style="max-width: 100%; max-height: 300px; margin-bottom: 20px;">
+                <div class="animal-fact">
+                    {% if is_dog %}
+                        <h3>Saviez-vous ?</h3>
+                        <p>Les chiens peuvent comprendre jusqu'à 250 mots et gestes !</p>
+                    {% else %}
+                        <h3>Saviez-vous ?</h3>
+                        <p>Les chats passent environ 70% de leur vie à dormir.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <h2 id="Summary">Résumé :</h2>
+            <ul>
+                <li><p>Animal identifié : <span class="highlight">{{ prediction }}</span></p></li>
+                <li><p>Confiance : <span class="highlight">{{ confidence|floatformat:2 }}%</span></p></li>
+                <li><p>Probabilité Chat : <span class="highlight">{{ prob_cat|floatformat:2 }}%</span></p></li>
+                <li><p>Probabilité Chien : <span class="highlight">{{ prob_dog|floatformat:2 }}%</span></p></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="try-again">
+        <a href='{% url "prediction" %}' class="button">Analyser une autre image</a>
+    </div>
+
+    <style>
+        .probability-bars {
+            margin: 20px 0;
+        }
+        .probability-bar {
+            height: 25px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        .probability-bar.cat {
+            background-color: #ff9a76;
+        }
+        .probability-bar.dog {
+            background-color: #76b5ff;
+        }
+        .probability-label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .animal-fact {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+{% endblock %}
