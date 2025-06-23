@@ -21,7 +21,7 @@
         .scroll-to-top {   position: fixed;   bottom: 10px;   right: 2px;   width: 40px;   height: 40px;   background: url("../images/Back-to-Top.png") center center no-repeat;   background-size: cover;   cursor: pointer;   opacity: 0.5;   transition: opacity 0.3s ease-in-out;   z-index: 9999; }
         .scroll-to-top:hover {opacity: 1;}.scroll-to-top:hover::after {   content: "Back-to-Top";   position: absolute;   top: -25px;   left: 50%;   transform: translateX(-50%);   font-size: 10px;   color: gray;   white-space: nowrap; }
         /* Attention : Adapté le chemin d'accès à l'image ENSAE.png dans le sélecteur css suivant*/
-        .icone::before {content: '';display: block;padding-top: 100%; background-image: url("../images/DL.jpg");background-size: cover;}
+        .icone::before {content: '';display: block;padding-top: 100%; background-image: url("{% static 'images/DL.jpg' %}");background-size: cover;}
         .titre {color :white;margin: auto;margin-top: 1%;margin-bottom: 1%;font-size: 200%;text-align: center;}
         h1, h2 {color :white;margin-left: 10%;margin-right: 10%;display:inline-block;}
         h3, h4, h5, h6 {margin-top: 0;margin-bottom: 0.5rem;}
